@@ -70,7 +70,13 @@ class Klotski:
 			Note: the 9 is a freespace so it is omitted.
 		
 		"""
-		return False
+		count = 1
+		for i in range(len(self._grid)):
+			for j in range(len(self._grid[0])):
+				if self._grid[i][j] != str(count):
+					return False
+				count = count + 1
+		return True
 	
 	def shuffle(self):
 		"""shuffles the grid using the shift function"""
