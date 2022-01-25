@@ -1,5 +1,6 @@
 import math
 import copy
+import random
 
 class Klotski:
 	"""
@@ -121,12 +122,20 @@ class Klotski:
 				count = count + 1
 		return True
 	
-	def shuffle(self):
-		"""shuffles the grid using the shift function"""
-		pass
+	def shuffle(self, n = 10):
+		"""
+			Shuffles the grid using the shift function.
+			An argument n decides the number of times to randomly shift.
+			the default value of n is 10.
+		"""
+		for i in range(n):
+			possible_choices = self.get_shifting_choices()
+			choice_keys = list(possible_choices.keys())
+			random_choice = choice_keys[random.randint(0, len(choice_keys) - 1)]
+			self.shift(random_choice)
 	
 	def reset(self):
-		"""resets grid to original state"""
+		"""Resets grid to original state."""
 		dimension = len(self._grid)
 		self._grid = [[ str(j + 1) for j in range(i * dimension, i * dimension + dimension)] for i in range(dimension)]
 		self._freespace_row = dimension - 1
