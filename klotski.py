@@ -1,4 +1,5 @@
 import math
+import copy
 
 class Klotski:
 	"""
@@ -11,6 +12,9 @@ class Klotski:
 		solved
 		shuffle
 		reset
+		valid_position
+		get_shifting_choices
+		get_grid
 	"""
 	def __init__(self, dimension = 3):
 		"""
@@ -23,7 +27,9 @@ class Klotski:
 		self._grid = [[ str(j + 1) for j in range(i * dimension, i * dimension + dimension)] for i in range(dimension)]
 		self._freespace_row = dimension - 1
 		self._freespace_column = dimension - 1
-		
+	
+	def get_grid(self):
+		return copy.deepcopy(self._grid)
 	
 	def to_grid_string(self):
 		"""Returns a string representing the klotski puzzle."""
@@ -37,6 +43,24 @@ class Klotski:
 			result += "\n\n"
 				
 		return result
+	
+	def valid_position(self, i, j):
+		"""return true if the passed in row(i),column(j) position is valid"""
+		return 0 <= i and i < len(self._grid) and 0 <= j and j < len(self._grid[0])
+	
+	def get_shifting_choices(self):
+		"""returns a dictionary of number pieces mapped to their positions"""
+		possible_choices = dict()
+		choices = [(self._freespace_row, self._freespace_column + 1),
+				   (self._freespace_row, self._freespace_column - 1),
+				   (self._freespace_row + 1, self._freespace_column),
+				   (self._freespace_row - 1, self._freespace_column)]
+	
+		for i,j in choices:
+			if self.valid_position(i,j):
+				number_piece = self._grid[i][j]
+				possible_choices[number_piece] = (i,j)
+		return possible_choices
 		
 	def __str__(self):
 		"""
@@ -44,6 +68,12 @@ class Klotski:
 		 	as well as a listing of which numbers can be shifted.
 		"""
 		grid_string = self.to_grid_string()
+		grid_string += "\n\n"
+		grid_string += "choices: "
+		shifting_choices = self.get_shifting_choices()
+		for choice in shifting_choices:
+			grid_string += choice + " | "
+		grid_string += "\n\n"
 		return grid_string
 	
 	def __repr__(self):
