@@ -82,11 +82,24 @@ class Klotski:
 		
 	def shift(self, choice):
 		"""
-			Shifts a given choice if a valid integer, altering the freespace position. 
+			Shifts a given choice if a valid string/integer, altering the freespace position. 
 			Returns true if number shifting successful otherwise
 			false if it wasn't a successful shift.
-		'"""
-		return False
+		"""
+		if isinstance(choice, int):
+			choice = str(choice)
+			
+		possible_choices = self.get_shifting_choices()
+		if choice not in possible_choices:
+			return False
+		
+		new_row,new_column = possible_choices[choice]
+		temp = self._grid[new_row][new_column]
+		self._grid[new_row][new_column] = self._grid[self._freespace_row][self._freespace_column]
+		self._grid[self._freespace_row][self._freespace_column] = temp
+		self._freespace_row = new_row
+		self._freespace_column = new_column
+		return True
 	
 	def solved(self):
 		"""
